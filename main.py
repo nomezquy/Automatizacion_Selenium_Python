@@ -24,19 +24,22 @@ coll_Fuente = db.fuente
 coll_Resultados = db.resultados
 grillas = coll_Fuente.find()
 
-
+#Se inicializa driver Chrome 
 driver.get("http://www.soda-pro.com/web-services/meteo-data/merra")
 funciones.inicioSesion(driver,usuario,contrasena)
 
-grillaActual = 1
-for grilla  in grillas:
-    grilla = coll_Fuente.find_one({'GRILLA': str(grillaActual)})
+grillaActual = 1  # Contador que lleva control del registro en colleccion fuente.
+for grilla  in grillas:  # Ciclo recorre grilla a grilla
+    grilla = coll_Fuente.find_one({'GRILLA': str(grillaActual)})  #Extraccion de datos para consulta desde DB.
     latitud = grilla["LAT"]
     longitud = grilla["LONG"]
     funciones.generarConsulta(driver,latitud,longitud,fechaInicio,fechaFin)
-    funciones.renombrar(grillaActual)#fechaInicio,fechaFin)
+    funciones.renombrar(grillaActual)
     funciones.insertarDb(coll_Resultados,grillaActual)
     grillaActual += 1
 
-
+# Finalizacion de ejecucion
+funciones.cerrarSesion(driver)
 funciones.finalizarDriver(driver)
+cliente.close()
+exit()

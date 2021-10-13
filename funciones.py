@@ -13,6 +13,7 @@ from datetime import datetime
 import time
 import pandas as pd
 import shutil
+from selenium.webdriver.support.ui import Select
 
 
 
@@ -58,6 +59,10 @@ def inicioSesion(driver,usuario,contrasena):
     campo_Contraseña.send_keys(Keys.ENTER)
     time.sleep(3)
 
+def cerrarSesion(driver):
+    boton_CerrarSesion = driver.find_element_by_xpath("//*[@id='non-admin-dockbar']/a[2]")
+    boton_CerrarSesion.click()
+
 def generarConsulta(driver,latitud,longitud,fecha_Inicio,fecha_Final):
     #Mapeo de campos consulta
 
@@ -69,6 +74,7 @@ def generarConsulta(driver,latitud,longitud,fecha_Inicio,fecha_Final):
     campo_Formato_Archivo = driver.find_element_by_id("outputFormat")
     boton_generar = driver.find_element_by_id("ext-gen70")
 
+
     #Ingresando valores
     campo_Lat.clear()
     campo_Lat.send_keys(latitud)
@@ -78,6 +84,7 @@ def generarConsulta(driver,latitud,longitud,fecha_Inicio,fecha_Final):
     campo_Finicial.send_keys(fecha_Inicio)
     campo_Ffinal.clear()
     campo_Ffinal.send_keys(fecha_Final)
+    campo_Step = Select(driver.find_element_by_id(""))
     boton_generar.click()
     time.sleep(5)
     boton_descargar = driver.find_element_by_id("responseLink")
