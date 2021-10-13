@@ -5,7 +5,7 @@ from datetime import date
 from datetime import datetime
 from selenium import webdriver
 from pymongo import MongoClient
-from selenium.webdriver.common import keys
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from datetime import datetime, timedelta
 from datetime import date
@@ -14,6 +14,8 @@ import time
 import pandas as pd
 import shutil
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions
 
 
 
@@ -31,22 +33,13 @@ fecha_Final = fechaFin
 
 
 
-def renombrar(Nregistro):
+def renombrar(Nregistro): # se piden fechas como parametros post validación de mes.
     fichero = glob.glob("C:/Users/Nomezquy/Downloads/*.csv")
     ficheroDestino = f"C:/Users/Nomezquy/Desktop/DataLab/automatizacion_Merra/Solucion/documentos/Merra_{fechaIniR}_{fechaFinR}_{Nregistro}.csv"
     ultimoArchivo = max(fichero, key=os.path.getctime)
     archivoRenombrado = f"C:/Users/Nomezquy/Downloads/Merra_{fechaIniR}_{fechaFinR}_{Nregistro}.csv"
     os.rename(ultimoArchivo, archivoRenombrado)
     shutil.copyfile(archivoRenombrado,ficheroDestino)
-
-
-
-
-
-def inicializarDriver(dr):
-    driver = webdriver.Chrome(executable_path=r"C:\dchrome\chromedriver.exe")
-    driver.get("http://www.soda-pro.com/web-services/meteo-data/merra")
-
 
 def finalizarDriver(dr):
     dr.close()
@@ -57,7 +50,7 @@ def inicioSesion(driver,usuario,contrasena):
     campo_Contraseña = driver.find_element_by_id("_58_password")
     campo_Contraseña.send_keys(contrasena)
     campo_Contraseña.send_keys(Keys.ENTER)
-    time.sleep(3)
+    driver.implicitly_wait(5) #time.sleep(3)
 
 def cerrarSesion(driver):
     boton_CerrarSesion = driver.find_element_by_xpath("//*[@id='non-admin-dockbar']/a[2]")
@@ -93,9 +86,13 @@ def generarConsulta(driver,latitud,longitud,fecha_Inicio,fecha_Final):
     seleccion_Format = driver.find_element_by_xpath("//*[@id='ext-gen91']/div[1]")
     seleccion_Format.click()
     boton_generar.click()
-    time.sleep(5)
-    boton_descargar = driver.find_element_by_id("responseLink")
-    boton_descargar.click()
+    try:
+        espera_boton_descargar = WebDriverWait(driver,15,1).until(expected_conditions.presence_of_element_located
+        ((By.ID,"responseLink")))
+    finally:
+        boton_descargar = driver.find_element_by_id("responseLink")
+        boton_descargar.click()
+    #time.sleep(5)
     time.sleep(2)
 
 def insertarDb(collecion,Nregistro):

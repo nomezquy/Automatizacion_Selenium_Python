@@ -8,6 +8,8 @@ from datetime import date
 from datetime import datetime
 import time
 import funciones
+import os
+import sys
 
 #Inicializamos variables
 usuario = "pruebas.dnomezquy@gmail.com"  # Usuario ingreso página
@@ -42,4 +44,5 @@ for grilla  in grillas:  # Ciclo recorre grilla a grilla
 funciones.cerrarSesion(driver)
 funciones.finalizarDriver(driver)
 cliente.close()
+sys.exit()
 exit()
