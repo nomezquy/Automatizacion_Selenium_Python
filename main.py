@@ -24,7 +24,7 @@ coll_Fuente = db.fuente
 coll_Resultados = db.resultados
 grillas = coll_Fuente.find()
 
-#Se inicializa driver Chrome 
+#Se inicializa driver Chrome
 driver.get("http://www.soda-pro.com/web-services/meteo-data/merra")
 funciones.inicioSesion(driver,usuario,contrasena)
 
